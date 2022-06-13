@@ -1,204 +1,188 @@
 public class AvlTree {
-    private AvlNode root;     
- 
-     public AvlTree()
-     {
-         root = null;
-     }    
-     
-     public void insert(int data)
-     {
-         root = insert(data, root);
-     }
-     
-     private int height(AvlNode t )
-     {
-         return t == null ? -1 : t.height;
-     }
-     
-     private int max(int lhs, int rhs)
-     {
-         return lhs > rhs ? lhs : rhs;
-     }
-     
-     private AvlNode insert(int x, AvlNode t)
-     {
-         if (t == null)
-             t = new AvlNode(x);
-         else if (x < t.data)
-         {
-             t.left = insert( x, t.left );
-             if( height( t.left ) - height( t.right ) == 2 )
-                 if( x < t.left.data )
-                     t = rotateWithLeftChild( t );
-                 else
-                     t = doubleWithLeftChild( t );
-         }
-         else if( x > t.data )
-         {
-             t.right = insert( x, t.right );
-             if( height( t.right ) - height( t.left ) == 2 )
-                 if( x > t.right.data)
-                     t = rotateWithRightChild( t );
-                 else
-                     t = doubleWithRightChild( t );
-         }
-         else
-           ;  
-         t.height = max( height( t.left ), height( t.right ) ) + 1;
-         return t;
-     }
-         
-     private AvlNode rotateWithLeftChild(AvlNode k2)
-     {
-         AvlNode k1 = k2.left;
-         k2.left = k1.right;
-         k1.right = k2;
-         k2.height = max( height( k2.left ), height( k2.right ) ) + 1;
-         k1.height = max( height( k1.left ), k2.height ) + 1;
-         return k1;
-     }
- 
-     
-     private AvlNode rotateWithRightChild(AvlNode k1)
-     {
-         AvlNode k2 = k1.right;
-         k1.right = k2.left;
-         k2.left = k1;
-         k1.height = max( height( k1.left ), height( k1.right ) ) + 1;
-         k2.height = max( height( k2.right ), k1.height ) + 1;
-         return k2;
-     }
-     
-     private AvlNode doubleWithLeftChild(AvlNode k3)
-     {
-         k3.left = rotateWithRightChild( k3.left );
-         return rotateWithLeftChild( k3 );
-     }
-       
-     private AvlNode doubleWithRightChild(AvlNode k1)
-     {
-         k1.right = rotateWithLeftChild( k1.right );
-         return rotateWithRightChild( k1 );
-     }    
-     
-     
-     public boolean search(int val)
-     {
-         return search(root, val);
-     }
-     private boolean search(AvlNode r, int val)
-     {
-         boolean found = false;
-         while ((r != null) && !found)
-         {
-             int rval = r.data;
-             if (val < rval)
-                 r = r.left;
-             else if (val > rval)
-                 r = r.right;
-             else
-             {
-                 found = true;
-                 System.out.print(r.toString());
-                 break;
-             }
-             found = search(r, val);
-         }
-         return found;
-     }
-     
-     public void inorder()
-     {
-         inorder(root);
-     }
-     private void inorder(AvlNode r)
-     {
-         if (r != null)
-         {
-             inorder(r.left);
-             System.out.print(r.data +" ");
-             inorder(r.right);
-         }
-     }
-     
-     public void preorder()
-     {
-         preorder(root);
-     }
-     private void preorder(AvlNode r)
-     {
-         if (r != null)
-         {
-             System.out.print(r.data +" ");
-             preorder(r.left);             
-             preorder(r.right);
-         }
-     }
-     
-     public void postorder()
-     {
-         postorder(root);
-     }
-     private void postorder(AvlNode r)
-     {
-         if (r != null)
-         {
-             postorder(r.left);             
-             postorder(r.right);
-             System.out.print(r.data +" ");
-         }
-     }     
+    private Node root;
 
-     Node deleteNode(Node root, int item) {
+    public AvlTree() {
+        root = null;
+    }
 
-    // Find the node to be deleted and remove it
-    if (root == null)
-      return root;
-    if (item < root.item)
-      root.left = deleteNode(root.left, item);
-    else if (item > root.item)
-      root.right = deleteNode(root.right, item);
-    else {
-      if ((root.left == null) || (root.right == null)) {
-        Node temp = null;
-        if (temp == root.left)
-          temp = root.right;
+    private int height(Node n) {
+        return n == null ? -1 : n.height;
+    }
+
+    private void updateHeight(Node n) {
+        n.height = 1 + Math.max(height(n.left), height(n.right));
+    }
+
+    public void insert(int data) {
+        root = insertNode(root, data);
+        inorder();
+        preorder();
+        postorder();
+    }
+
+    private Node insertNode(Node node, int data) {
+        if (node == null) {
+            return new Node(data);
+        } else if (node.data > data) {
+            node.left = insertNode(node.left, data);
+        } else if (node.data < data) {
+            node.right = insertNode(node.right, data);
+        }
+
+        return rebalance(node);
+    }
+
+    public void delete(int data) {
+        Node nodoToDelete = deleteNode(root, data);
+        inorder();
+        preorder();
+        postorder();
+    }
+
+    private Node deleteNode(Node node, int data) {
+        if (node == null) {
+            return node;
+        } else if (node.data > data) {
+            node.left = deleteNode(node.left, data);
+        } else if (node.data < data) {
+            node.right = deleteNode(node.right, data);
+        } else {
+            if (node.left == null || node.right == null) {
+                node = (node.left == null) ? node.right : node.left;
+            } else {
+                Node mostLeftChild = getMostLeftChild(node.right);
+                node.data = mostLeftChild.data;
+                node.right = deleteNode(node.right, node.data);
+            }
+        }
+        if (node != null) {
+            node = rebalance(node);
+        }
+        return node;
+    }
+
+    public void search(int data) {
+        searchNode(root, data);
+    }
+
+    private Node searchNode(Node node, int data) {
+        Node current = node;
+        while (current != null) {
+            System.out.println(current.data);
+            if (current.data == data) {
+                System.out.println("encounter!");
+                break;
+            } else if (current.data < data) {
+                current = current.right;
+                System.out.println("right");
+            } else {
+                current = current.left;
+                System.out.println("left");
+            }
+        }
+        if (current == null) {
+            System.out.println("not encounter");
+        }
+        return current;
+    }
+
+    private int getBalance(Node n) {
+        if (n == null)
+            return 0;
         else
-          temp = root.left;
-        if (temp == null) {
-          temp = root;
-          root = null;
-        } else
-          root = temp;
-      } else {
-        Node temp = nodeWithMimumValue(root.right);
-        root.item = temp.item;
-        root.right = deleteNode(root.right, temp.item);
-      }
+            return height(n.left) - height(n.right);
     }
-    if (root == null)
-      return root;
+    private Node rebalance(Node z) {
+        updateHeight(z);
+        int balance = getBalance(z);
+        if (balance > 1) {
+            if (height(z.left.left) > height(z.left.right))
+                z = simpleRotationToRight(z);
+            else {
+                z.left = simpleRotationToLeft(z.left);
+                z = simpleRotationToRight(z);
+            }
+        } else if (balance < -1) {
+            if (height(z.right.right) > height(z.right.left)) {
+                z = simpleRotationToLeft(z);
+            } else {
+                z.right = simpleRotationToRight(z.right);
+                z = simpleRotationToLeft(z);
+            }
+        }
+        return z;
+    }
 
-    // Update the balance factor of each node and balance the tree
-    root.height = max(height(root.left), height(root.right)) + 1;
-    int balanceFactor = getBalanceFactor(root);
-    if (balanceFactor > 1) {
-      if (getBalanceFactor(root.left) >= 0) {
-        return rightRotate(root);
-      } else {
-        root.left = leftRotate(root.left);
-        return rightRotate(root);
-      }
+    private Node simpleRotationToLeft(Node y) {
+        Node x = y.right;
+        Node z = x.left;
+        x.left = y;
+        y.right = z;
+        updateHeight(y);
+        updateHeight(x);
+        return x;
     }
-    if (balanceFactor < -1) {
-      if (getBalanceFactor(root.right) <= 0) {
-        return leftRotate(root);
-      } else {
-        root.right = rightRotate(root.right);
-        return leftRotate(root);
-      }
+
+    private Node simpleRotationToRight(Node y) {
+        Node x = y.left;
+        Node z = x.right;
+        x.right = y;
+        y.left = z;
+        updateHeight(y);
+        updateHeight(x);
+        return x;
     }
-    return root;
-  }
+
+    public void inorder() {
+        System.out.println("Em ordem: \n");
+        inorder(root);
+        System.out.println("\n");
+    }
+
+    private void inorder(Node n) {
+        if (n != null) {
+            inorder(n.left);
+            System.out.print(n.data + " ");
+            inorder(n.right);           
+        }
+    }
+
+    public void preorder() {
+        System.out.println("Pré-ordem:\n ");
+        preorder(root);
+        System.out.println("\n");
+    }
+
+    private void preorder(Node r) {
+        if (r != null) {
+            System.out.print(r.data + " ");
+            preorder(r.left);
+            preorder(r.right);
+            
+        }
+    }
+
+    public void postorder() {
+        System.out.println("Pós-ordem:\n ");
+        postorder(root);
+        System.out.println("\n");
+    }
+
+    private void postorder(Node r) {
+        if (r != null) {
+            postorder(r.left);
+            postorder(r.right);
+            System.out.print(r.data + " ");
+            
+        }
+    }
+
+    private Node getMostLeftChild(Node n) {
+        Node current = n;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+
 }
