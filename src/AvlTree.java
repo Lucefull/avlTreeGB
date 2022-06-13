@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class AvlTree {
     private Node root;
 
@@ -92,6 +96,7 @@ public class AvlTree {
         else
             return height(n.left) - height(n.right);
     }
+
     private Node rebalance(Node z) {
         updateHeight(z);
         int balance = getBalance(z);
@@ -143,7 +148,7 @@ public class AvlTree {
         if (n != null) {
             inorder(n.left);
             System.out.print(n.data + " ");
-            inorder(n.right);           
+            inorder(n.right);
         }
     }
 
@@ -158,7 +163,7 @@ public class AvlTree {
             System.out.print(r.data + " ");
             preorder(r.left);
             preorder(r.right);
-            
+
         }
     }
 
@@ -173,7 +178,7 @@ public class AvlTree {
             postorder(r.left);
             postorder(r.right);
             System.out.print(r.data + " ");
-            
+
         }
     }
 
@@ -183,6 +188,23 @@ public class AvlTree {
             current = current.left;
         }
         return current;
+    }
+
+    public void readCSV(String path) {
+        String line = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            while ((line = br.readLine()) != null) 
+            {
+                String[] employee = line.split(";"); 
+                System.out.println("Employee [First Name=" + employee[0] + ", Last Name=" + employee[1]
+                        + ", Designation=" + employee[2] + ", Contact=" + employee[3] + ", Salary= " + employee[4]
+                        + ", City= " + employee[5] + "]");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
