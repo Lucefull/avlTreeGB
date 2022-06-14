@@ -2,8 +2,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Pessoa {
-    private BigDecimal numeroCPF;
-    private BigDecimal numeroRG;
+    private long numeroCPF;
+    private long numeroRG;
     private String nome;
     private Date dataNascimento;
     private String cidadeNascimento;
@@ -11,7 +11,7 @@ public class Pessoa {
     public Pessoa() {
     }
 
-    public Pessoa(BigDecimal numeroCPF, BigDecimal numeroRG, String nome, Date dataNascimento,
+    public Pessoa(long numeroCPF, long numeroRG, String nome, Date dataNascimento,
             String cidadeNascimento) {
         this.numeroCPF = numeroCPF;
         this.numeroRG = numeroRG;
@@ -20,19 +20,19 @@ public class Pessoa {
         this.cidadeNascimento = cidadeNascimento;
     }
 
-    public BigDecimal getNumeroCPF() {
+    public long getNumeroCPF() {
         return numeroCPF;
     }
 
-    public void setNumeroCPF(BigDecimal numeroCPF) {
+    public void setNumeroCPF(long numeroCPF) {
         this.numeroCPF = numeroCPF;
     }
 
-    public BigDecimal getNumeroRG() {
+    public long getNumeroRG() {
         return numeroRG;
     }
 
-    public void setNumeroRG(BigDecimal numeroRG) {
+    public void setNumeroRG(long numeroRG) {
         this.numeroRG = numeroRG;
     }
 

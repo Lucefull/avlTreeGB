@@ -1,16 +1,16 @@
 public class Node {
     Node left, right;
-    int data;
+    Pessoa data;
     int height;
 
     public Node() {
         left = null;
         right = null;
-        data = 0;
+        data = new Pessoa();
         height = 0;
     }
 
-    public Node(int n) {
+    public Node(Pessoa n) {
         left = null;
         right = null;
         data = n;

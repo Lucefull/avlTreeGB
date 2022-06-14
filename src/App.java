@@ -1,3 +1,6 @@
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -8,7 +11,16 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        AvlTree tree = new AvlTree();
+        AvlTree tree = new AvlTree();   
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");   
+        String value = "14/06/2022";
+        try{
+            Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(value);
+            System.out.println(formatter.format(date1));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+         
         System.out.println("--- AVLTree Tree ---\n");
         String choice = "";
 
