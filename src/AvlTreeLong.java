@@ -1,16 +1,16 @@
-public class AvlTreeDate {
+public class AvlTreeLong {
     private Node root;
 
-    public AvlTreeDate() {
+    public AvlTreeLong() {
         root = null;
     }
 
     private Node insertNode(Node node, Pessoa data) {
         if (node == null) {
             return new Node(data);
-        } else if (node.data.getDataNascimento().before(data.getDataNascimento())) {
+        } else if (node.data.getNumeroCPF() > data.getNumeroCPF()) {
             node.left = insertNode(node.left, data);
-        } else if (node.data.getDataNascimento().after(data.getDataNascimento())) {
+        } else if (node.data.getNumeroCPF() < data.getNumeroCPF()) {
             node.right = insertNode(node.right, data);
         }
 
