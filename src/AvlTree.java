@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class AvlTree {
+    /* 
     private Node root;
 
     public AvlTree() {
@@ -24,7 +25,7 @@ public class AvlTree {
         postorder();
     }
 
-    private Node insertNode(Node node, int data) {
+    private Node insertNode(Node node, Pessoa data) {
         if (node == null) {
             return new Node(data);
         } else if (node.data > data) {
@@ -206,5 +207,5 @@ public class AvlTree {
             e.printStackTrace();
         }
     }
-
+    */
 }

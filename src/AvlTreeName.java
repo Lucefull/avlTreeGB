@@ -5,6 +5,10 @@ public class AvlTreeName {
         root = null;
     }
 
+    public void insert(Pessoa data) {
+        root = insertNode(root, data);        
+    }
+
     private Node insertNode(Node node, Pessoa data) {
         if (node == null) {
             return new Node(data);
